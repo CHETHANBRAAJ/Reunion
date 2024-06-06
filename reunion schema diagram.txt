@@ -1,0 +1,44 @@
+  +------------------+       +------------------+
+  |   CustomerDim    |       |   ProductDim     |
+  +------------------+       +------------------+
+  | customer_id (PK) |       | product_id (PK)  |
+  | name             |       | product_name     |
+  | email            |       | category         |
+  | contact_number   |       | brand            |
+  | address          |       | description      |
+  | registration_date|       +------------------+
+  | is_active        |
+  +------------------+         |        |
+              \                 /        \ 
+               \               /          \
+                \             /            \
+                +-------------------+      +---------------------+
+                |  ProductVariantDim|      |  PriceHistoryDim    |
+                +-------------------+      +---------------------+
+                | product_variant_id(PK)  | price_id (PK)       |
+                | product_id (FK)         | | product_variant_id(FK)|
+                | variant_name            | | price               |
+                | launch_date             | | effective_date      |
+                | discontinuation_date    | | end_date            |
+                +-------------------+      +---------------------+
+                    \              /
+                     \            /
+                      \          /
+                        +-----------------+
+                        |   OrderFact     |
+                        +-----------------+
+                        | order_id (PK)   |
+                        | customer_id (FK)|
+                        | product_variant_id (FK)|
+                        | order_date      |
+                        | quantity        |
+                        | total_price     |
+                        +-----------------+
+
+
+Explanation of Design Choices
+OrderFact Table: Central fact table capturing order details, including references to the customer and product variant involved in the order.
+CustomerDim Table: Captures all relevant customer details. is_active helps in tracking if the customer is currently active.
+ProductDim Table: Contains details of products. Separate from variants to normalize product information.
+ProductVariantDim Table: Contains variant-specific information and links to the parent product.
+PriceHistoryDim Table: Tracks historical price changes for each product variant, allowing queries to understand pricing over time.
